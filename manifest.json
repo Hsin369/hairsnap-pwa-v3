@@ -1,0 +1,16 @@
+
+{
+  "name": "HairSnap PWA | Threads of Form",
+  "short_name": "HairSnap",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#faf0f5",
+  "theme_color": "#ff4081",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
