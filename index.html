@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HairSnap 表單 v3.7.2</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#ffe6ea"/>
+  <link rel="icon" href="icon-512.png" />
+  <style>
+    body {
+      background-color: #ffe6ea;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    form {
+      background: white;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    input, textarea, button {
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+    }
+    button {
+      background-color: #ff99bb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    #success-message {
+      margin-top: 1rem;
+      color: green;
+      display: none;
+    }
+    #bird {
+      width: 80px;
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      display: none;
+      animation: fly 1s ease-in-out;
+    }
+    @keyframes fly {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <img id="bird" src="https://i.ibb.co/3FZFnGn/hummingbird-fly.gif" alt="蜂鳥動畫">
+  <h2>HairSnap 表單</h2>
+  <form id="hairForm">
+    <input type="text" name="髮型名稱" placeholder="髮型名稱（必填）" required />
+    <input type="text" name="分類" placeholder="分類（必填）" required />
+    <input type="text" name="狀態" placeholder="狀態（必填）" required />
+    <input type="text" name="層次設計" placeholder="層次設計（可多選）" />
+    <input type="text" name="使用情境" placeholder="使用情境（可多選）" />
+    <input type="text" name="顏色 / 配件" placeholder="顏色 / 配件" />
+    <input type="text" name="髮長分類" placeholder="髮長分類（可多選）" />
+    <textarea name="特點說明" placeholder="特點說明"></textarea>
+    <input type="url" name="參考圖片" placeholder="參考圖片網址" />
+    <button type="submit">送出</button>
+    <div id="success-message">✅ 成功寫入 Notion！</div>
+  </form>
+
+  <script>
+    const form = document.getElementById('hairForm');
+    const bird = document.getElementById('bird');
+    const message = document.getElementById('success-message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      const body = {};
+      data.forEach((value, key) => body[key] = value);
+
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzuDVxbRW8Q9o9HZTPOTCgceJeL3JZWBVW0Rsgg_PUA5sQXINcTG4q5uG0_gTeeNcPx/exec", {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          bird.style.display = "block";
+          message.style.display = "block";
+          setTimeout(() => {
+            bird.style.display = "none";
+            message.style.display = "none";
+            form.reset();
+          }, 1500);
+        }
+      } catch (err) {
+        alert("❌ 發送失敗！");
+      }
+    });
+  </script>
+</body>
+</html>
